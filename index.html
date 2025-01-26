@@ -1,108 +1,119 @@
-import React, { useState } from "react";
-import Sentiment from "sentiment";
-import { motion } from "framer-motion";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Sentiment Heatmap</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/4.1.17/framer-motion.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sentiment/5.0.2/sentiment.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+    const { motion } = window['framer-motion'];
+    const Sentiment = window['sentiment'];
 
-// Simple example that analyzes each word's sentiment individually
-// Then animates it as a color-coded heatmap.
-// This uses Tailwind CSS classes for color, plus Framer Motion for animation.
+    function SentimentHeatmap() {
+      const [text, setText] = useState(
+        `Five years ago, I embarked on an ambitious mission: teaching machines the subtle art of sarcasm. Using the NLP tools of the time, the results were amusing—machines misread deadpan remarks and missed jokes, offering more comedy than clarity. It wasn't just a tech issue; it was a challenge involving language, culture, and intent.\n\nStanding at 4'1", I've navigated a world not always designed with me in mind, sharpening my super sarcastic wit. Today, NLP has advanced with adaptive, context-aware systems. But can machines handle the complexities of human language, especially South Africa's dry sarcasm?\n\nIn this talk, we'll revisit "Sarcasm as a Service" to see what worked and what didn't. We'll compare modern tools with their 2019 counterparts in a live demo. Whether you're into linguistics, smarter tools, or just irony, this session offers insights, laughs, and perhaps some hope—or maybe not—for the future of communication.`
+      );
 
-export default function SentimentHeatmap() {
-  const [text, setText] = useState(
-    `Five years ago, I embarked on an ambitious mission: teaching machines the subtle art of sarcasm. Using the NLP tools of the time, the results were amusing—machines misread deadpan remarks and missed jokes, offering more comedy than clarity. It wasn't just a tech issue; it was a challenge involving language, culture, and intent.\n\nStanding at 4'1", I've navigated a world not always designed with me in mind, sharpening my super sarcastic wit. Today, NLP has advanced with adaptive, context-aware systems. But can machines handle the complexities of human language, especially South Africa's dry sarcasm?\n\nIn this talk, we'll revisit "Sarcasm as a Service" to see what worked and what didn't. We'll compare modern tools with their 2019 counterparts in a live demo. Whether you're into linguistics, smarter tools, or just irony, this session offers insights, laughs, and perhaps some hope—or maybe not—for the future of communication.`
-  );
+      const [words, setWords] = useState([]);
 
-  const [words, setWords] = useState([]);
+      const sentiment = new Sentiment();
 
-  const sentiment = new Sentiment();
-
-  // Animate container with stagger
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.02,
-      },
-    },
-  };
-
-  // Animate individual words
-  const wordVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
-
-  const analyzeText = () => {
-    const splitWords = text.split(/\s+/);
-    const analyzed = splitWords.map((rawWord) => {
-      // Remove punctuation for dictionary lookup
-      const cleaned = rawWord.replace(/[^a-zA-Z0-9']+/g, "").toLowerCase();
-      // Analyze each individual word
-      const result = sentiment.analyze(cleaned);
-      return {
-        text: rawWord,  // keep original punctuation
-        score: result.score,
+      const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.02,
+          },
+        },
       };
-    });
-    setWords(analyzed);
-  };
 
-  // Color code by sentiment score
-  // Negative = more red, 0 = gray, positive = more green
-  const getBackgroundColor = (score) => {
-    if (score < 0) {
-      return "bg-red-200";
-    } else if (score > 0) {
-      return "bg-green-200";
-    } else {
-      return "bg-gray-200";
-    }
-  };
+      const wordVariants = {
+        hidden: { opacity: 0, y: 10 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.2,
+          },
+        },
+      };
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-md">
-        <h1 className="text-2xl font-bold mb-4">React Sentiment Heatmap</h1>
-        <textarea
-          className="w-full border rounded p-2 mb-2"
-          rows={6}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-          onClick={analyzeText}
-        >
-          Analyze
-        </button>
+      const analyzeText = () => {
+        const splitWords = text.split(/\s+/);
+        const analyzed = splitWords.map((rawWord) => {
+          const cleaned = rawWord.replace(/[^a-zA-Z0-9']+/g, "").toLowerCase();
+          const result = sentiment.analyze(cleaned);
+          return {
+            text: rawWord,
+            score: result.score,
+          };
+        });
+        setWords(analyzed);
+      };
 
-        {words.length > 0 && (
-          <motion.div
-            className="flex flex-wrap gap-1 mt-4"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {words.map((w, index) => (
-              <motion.span
-                key={index}
-                variants={wordVariants}
-                className={`inline-block px-2 py-1 rounded ${getBackgroundColor(
-                  w.score
-                )}`}
+      const getBackgroundColor = (score) => {
+        if (score < 0) {
+          return "bg-red-200";
+        } else if (score > 0) {
+          return "bg-green-200";
+        } else {
+          return "bg-gray-200";
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-gray-100 p-4">
+          <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-md">
+            <h1 className="text-2xl font-bold mb-4">React Sentiment Heatmap</h1>
+            <textarea
+              className="w-full border rounded p-2 mb-2"
+              rows={6}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+              onClick={analyzeText}
+            >
+              Analyze
+            </button>
+
+            {words.length > 0 && (
+              <motion.div
+                className="flex flex-wrap gap-1 mt-4"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
               >
-                {w.text}
-              </motion.span>
-            ))}
-          </motion.div>
-        )}
-      </div>
-    </div>
-  );
-}
+                {words.map((w, index) => (
+                  <motion.span
+                    key={index}
+                    variants={wordVariants}
+                    className={`inline-block px-2 py-1 rounded ${getBackgroundColor(
+                      w.score
+                    )}`}
+                  >
+                    {w.text}
+                  </motion.span>
+                ))}
+              </motion.div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<SentimentHeatmap />, document.getElementById('root'));
+  </script>
+</body>
+</html>
