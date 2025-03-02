@@ -21,6 +21,7 @@ This project demonstrates a React-based sentiment heatmap using the Sentiment an
 2. Install dependencies:
    ```sh
    npm install
+   npm install sentiment framer-motion
    ```
 
 3. Start the development server:
@@ -44,3 +45,10 @@ This project demonstrates a React-based sentiment heatmap using the Sentiment an
 ## Conclusion
 
 This project showcases the integration of sentiment analysis and animation in a React application. It highlights the power of combining different libraries to create a dynamic and interactive user experience.
+
+## Installation Instructions
+
+To install the required libraries, run the following command:
+```sh
+npm install sentiment framer-motion
+```
