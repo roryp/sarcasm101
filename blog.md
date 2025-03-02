@@ -29,9 +29,17 @@ The user tested the page by copying the generated HTML into a local file, openin
 
 Next, we discussed leveraging existing **React**-compatible sentiment libraries. The top recommendation was the [**Sentiment**](https://www.npmjs.com/package/sentiment) library, which:
 
-- Comes with a built-in AFINN-based wordlist
+- Comes with a built-in AFINN-165 wordlist and Emoji Sentiment Ranking
 - Provides easy-to-use `.analyze()` function
 - Delivers a `score`, `comparative`, and lists of positive/negative words
+- Offers excellent performance (over 860,000 operations/sec)
+- Supports multiple languages and custom dictionaries
+
+The Sentiment library works by analyzing text against the AFINN wordlist, where words are rated with an integer between -5 (negative) and +5 (positive). The returned results include:
+- **Score**: The sum of sentiment values of recognized words
+- **Comparative**: Score normalized by the total number of tokens
+- **Words**: List of words found in the AFINN dictionary
+- **Positive/Negative**: Words categorized by sentiment polarity
 
 ChatGPT demonstrated a simple integration:
 
@@ -81,7 +89,28 @@ As each iteration of the code was produced, we tested by:
 4. **Serving** the development build (`npm start`)
 5. **Verifying** that the animations appeared and that the sentiment scores were correct.
 
-Through each test, ChatGPT refined the code or explained the usage until it worked seamlessly.
+We made extensive use of the Sentiment library's API to analyze text. A typical implementation looked like:
+
+```js
+// Create a new sentiment analyzer instance
+const sentiment = new Sentiment();
+
+// Analyze text with default options
+const result = sentiment.analyze('Cats are amazing but sometimes annoying');
+console.log(result); 
+// Shows: {score: 1, comparative: 0.2, tokens: [...], words: [...], positive: ['amazing'], negative: ['annoying']}
+
+// With custom options to emphasize certain words
+const options = {
+  extras: {
+    'cats': 5,  // Adding custom word scores
+    'amazing': 2 // Overwriting existing word scores
+  }
+};
+const customResult = sentiment.analyze('Cats are totally amazing!', options);
+```
+
+Through each test, we refined the code until the sentiment analysis accurately detected the emotional tone of various text samples, while allowing us to customize the analysis for sarcasm detection.
 
 ## Step 5: Reflections on Sarcasm, Sentiment, and AI Tools
 
@@ -99,5 +128,3 @@ We saw firsthand how sarcasm introduces complexity in natural language processin
 The entire canvas conversation was a blast—**we built code**, **tested** it, **fixed** it, and **learned** a lot about sarcasm and sentiment along the way. From a simple HTML page to a dynamic React heatmap, each step showcased the **power of iterative development** with ChatGPT.
 
 > **Try it yourself**: Clone the final code snippet from the conversation’s canvas, run it locally with `npm install`, and see how well it captures sentiment. You might be surprised how a single library plus a few lines of code can highlight positivity, negativity, and neutral text—albeit with questionable skill at sniffing out sarcasm’s deeper meaning!
-
----
