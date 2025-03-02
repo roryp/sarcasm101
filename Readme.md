@@ -1,54 +1,70 @@
 # React Sentiment Heatmap
 
-## Introduction
-
-This project demonstrates a React-based sentiment heatmap using the Sentiment and Framer Motion libraries. The heatmap visualizes the sentiment of each word in a given text.
+A React-based sentiment heatmap that visualizes the sentiment of each word in a given text using the Sentiment library and Framer Motion for animations.
 
 ## Features
 
 - Analyze text sentiment using the Sentiment library
-- Visualize sentiment with color-coded words
+- Visualize sentiment with color-coded words (red for negative, green for positive, gray for neutral)
 - Animate word appearance with Framer Motion
+- Built with modern React (hooks) and TailwindCSS
 
-## Setup
+## Installation
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/roryp/canvaso1.git
-   cd canvaso1
-   ```
+Clone the repository and install dependencies:
 
-2. Install dependencies:
-   ```sh
-   npm install
-   npm install sentiment framer-motion
-   ```
-
-3. Start the development server:
-   ```sh
-   npm start
-   ```
-
-## Usage
-
-1. Open the application in your browser.
-2. Enter text in the textarea.
-3. Click the "Analyze" button to see the sentiment heatmap.
-
-## Libraries Used
-
-- [React](https://reactjs.org/)
-- [Sentiment](https://www.npmjs.com/package/sentiment)
-- [Framer Motion](https://www.framer.com/motion/)
-- [TailwindCSS](https://tailwindcss.com/)
-
-## Conclusion
-
-This project showcases the integration of sentiment analysis and animation in a React application. It highlights the power of combining different libraries to create a dynamic and interactive user experience.
-
-## Installation Instructions
-
-To install the required libraries, run the following command:
-```sh
-npm install sentiment framer-motion
+```bash
+git clone https://github.com/yourusername/react-sentiment-heatmap.git
+cd react-sentiment-heatmap
+npm install
 ```
+
+## Development
+
+Start the development server:
+
+```bash
+npm start
+```
+
+This will start a development server at http://localhost:3000.
+
+## Building for Production
+
+Build the project for production:
+
+```bash
+npm run build
+```
+
+This will create optimized production files in the `dist` directory.
+
+## Project Structure
+
+```
+├── public/
+│   └── index.html       # HTML template
+├── src/
+│   ├── components/
+│   │   └── SentimentHeatmap.jsx  # Main component
+│   ├── index.css        # Global styles with Tailwind imports
+│   └── index.js         # Application entry point
+├── .babelrc             # Babel configuration
+├── package.json         # Project dependencies and scripts
+├── postcss.config.js    # PostCSS configuration for Tailwind
+├── tailwind.config.js   # Tailwind CSS configuration
+└── webpack.config.js    # Webpack configuration
+```
+
+## Technologies Used
+
+- React 18
+- Sentiment 5.0.2
+- Framer Motion 10
+- TailwindCSS 3
+- Webpack 5
+- Babel 7
+
+## License
+
+MIT
